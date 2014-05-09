@@ -58,8 +58,9 @@ class Term():
 
 
   def subsample(self, toSparsity):
-    toSparsity = min(toSparsity, self.sparsity)
     numBits = int(self.width * self.height * toSparsity / 100)
+    numBits = min(numBits, len(self.bitmap))
+
     self.bitmap = random.sample(self.bitmap, numBits)
     self.updateSparsity()
 
