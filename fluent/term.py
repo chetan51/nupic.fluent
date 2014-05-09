@@ -19,6 +19,8 @@
 # http://numenta.org/licenses/
 # ----------------------------------------------------------------------
 
+import random
+
 from fluent.cept import Cept
 
 
@@ -46,8 +48,20 @@ class Term():
     self.bitmap = bitmap
     self.width = width
     self.height = height
-    self.sparsity = (100.0 * len(bitmap)) / (width*height)
+    self.updateSparsity()
     return self
+
+
+  def updateSparsity(self):
+    total = self.width * self.height
+    self.sparsity = (100.0 * len(self.bitmap)) / (total)
+
+
+  def subsample(self, toSparsity):
+    toSparsity = min(toSparsity, self.sparsity)
+    numBits = int(self.width * self.height * toSparsity / 100)
+    self.bitmap = random.sample(self.bitmap, numBits)
+    self.updateSparsity()
 
 
   def toArray(self):

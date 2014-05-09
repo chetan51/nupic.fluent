@@ -41,6 +41,7 @@ class Model():
                 permanenceInc=0.1, permanenceDec=0.0,
                 activationThreshold=164,
                 pamLength=10,
+                normalizeToSparsity=None,
                 checkpointDir=None):
 
     self.tp = TP(numberOfCols=numberOfCols, cellsPerColumn=cellsPerColumn,
@@ -53,6 +54,8 @@ class Model():
                 globalDecay=0, burnIn=1,
                 checkSynapseConsistency=False,
                 pamLength=pamLength)
+
+    self.normalizeToSparsity = normalizeToSparsity
 
     self.checkpointDir = checkpointDir
     self.checkpointPklPath = None
@@ -104,6 +107,10 @@ class Model():
   def feedTerm(self, term, learn=True):
     """ Feed a Term to model, returning next predicted Term """
     tp = self.tp
+
+    if self.normalizeToSparsity:
+      term.subsample(self.normalizeToSparsity)
+      
     array = numpy.array(term.toArray(), dtype="uint32")
     tp.compute(array, enableLearn = learn, computeInfOutput = True)
 

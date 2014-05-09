@@ -89,6 +89,17 @@ class TestModel(unittest.TestCase):
     self.assertTrue(len(prediction.bitmap))
 
 
+  def test_normalizeToSparsity(self):
+    term = Term().createFromString("cat")
+    model = Model(normalizeToSparsity=2.0)
+
+    model.feedTerm(term)
+    model.feedTerm(term)
+    prediction = model.feedTerm(term)
+
+    self.assertTrue(len(prediction.closestStrings()))
+
+
 
 if __name__ == '__main__':
   unittest.main()
